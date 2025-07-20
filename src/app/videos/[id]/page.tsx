@@ -1,16 +1,21 @@
 import { notFound } from "next/navigation";
 
-type VideoDetailPageProps = { params: { id: string } };
-
+// Remove custom type and use inline typing
 async function getVideo(id: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${id}`);
   if (!res.ok) return null;
   return res.json();
 }
 
-export default async function VideoDetailPage({ params }: VideoDetailPageProps) {
-  const data = await getVideo(params.id);
+export default async function VideoDetailPage({
+  params,
+}:any) {
+  const videoId = params.id;
+  if (!videoId) return notFound();
+
+  const data = await getVideo(videoId);
   if (!data) return notFound();
+
   return (
     <div className="max-w-2xl mx-auto p-6">
       <video
